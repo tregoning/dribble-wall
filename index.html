@@ -1,0 +1,134 @@
+<!DOCTYPE HTML>
+<!-- Problem is the number of columns drawn is more than the correctly calculated number -->
+<html lang="en-GB">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+		body, html{
+			height: 100%;
+		}
+	
+		body,ul,li,img{
+			padding:0;
+			margin:0;
+		}
+		
+		ul{
+			list-style: none;
+			margin: 0 auto;
+		}
+		
+		li{
+			float: left;
+			//Needs to match imageHeight
+			height: 150px;
+		}
+	</style>
+</head>
+<body>
+<ul></ul>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script>
+	(function($){
+		var $body = $('body'),
+			winWidth = $body.width(),
+			winHeight = $body.height(),
+			imageList,
+			imageWidth = 200,
+			imageHeight = 150,
+			numberOfImagesFetchedPerCall = 30,
+			imgCollection = [],
+			numberOfColumnsRendered = 0,
+			numberOfImagesPerColumn,
+			numberOfColumnsRequired,
+			numberOfRenderColumnCallsPerFetch = Math.floor( winWidth / numberOfImagesFetchedPerCall );
+			
+		
+		var init = function(){
+			numberOfImagesPerColumn = numberOfImagesPerColumn();
+			numberOfColumnsRequired = numberOfColumnsRequired();
+			imageList = $("ul");
+			imageList.width( numberOfImagesPerColumn * imageWidth );
+			renderPage();
+		};
+	
+		var numberOfImagesPerColumn = function(){
+			return Math.floor( winWidth / imageWidth );
+		};
+	
+		var numberOfColumnsRequired = function(){
+			return Math.floor( winHeight / imageHeight );
+		};
+	
+		var renderPage = function(){
+			var totalNumberOfImagesRequired = numberOfImagesPerColumn * numberOfColumnsRequired,
+				numberOfFetches = Math.ceil( totalNumberOfImagesRequired / numberOfImagesFetchedPerCall );
+		
+			for (var i = 1; i <= numberOfFetches; i++){
+				fetchDribbbleImages(i)
+			};
+		};
+	
+		//debuts, everyone, popular
+		var fetchDribbbleImages = function(page){
+			console.log("WAIT! calling API")
+			$.getJSON("http://api.dribbble.com/shots/popular?callback=?",
+				{
+				    page: page,
+				    per_page:30
+				},
+				function(data){
+					console.log("Found lots more shots:->",data.shots.length);
+				    $.each(data.shots, function(){
+						imgCollection.push(this);	
+				    });
+				
+					for(var i=0; i < numberOfRenderColumnCallsPerFetch; i++){
+						if(numberOfColumnsRendered < numberOfColumnsRequired){
+							insertColumn(numberOfRenderColumnCallsPerFetch);
+							console.log("looping", i, numberOfRenderColumnCallsPerFetch);
+						}else{
+							break;
+						}
+					};
+			
+				});
+		};
+	
+		var renderColumn = function(){
+			console.log("renderColumn");
+			var imgs = imgCollection.splice(0, numberOfImagesPerColumn);
+		
+			$.each(imgs,function(){
+				imageList.append('<li><img src="' + this.image_teaser_url + '" height="' + imageHeight + '" width="' + imageWidth + '"/></li>');
+			});
+
+			numberOfColumnsRendered += 1;
+		};
+		
+		var renderColumnEventually = function(){
+			//console.log("renderColumnEventually");
+			if(numberOfColumnsRequired < numberOfColumnsRendered){
+				setTimeout(function(){
+					insertColumn();
+				}, 3000);
+			}
+		};
+		
+		var insertColumn = function(){
+			console.log("insertColumn",imgCollection.length);
+			console.log(numberOfColumnsRequired,numberOfColumnsRendered)
+			if(numberOfImagesPerColumn <= imgCollection.length){
+				renderColumn();
+			}else{
+				renderColumnEventually();
+			}	
+		};
+		
+		$(init);
+		
+	}(jQuery));
+</script>
+</body>
+</html>
