@@ -5,6 +5,22 @@
 	<meta charset="UTF-8">
 	<title></title>
 	<style>
+
+		@-webkit-keyframes spin { 
+			0% {
+				-webkit-transform: rotateY(0deg);
+			} 20% {
+				-webkit-transform: rotateY(180deg);
+			} 40% {
+				-webkit-transform: rotateY(360deg);
+				-webkit-filter: grayscale(1);
+			}
+			100% {
+				-webkit-filter: none;
+				-webkit-transform: rotateY(360deg);
+			}
+		}
+
 		body, html{
 			height: 100%;
 		}
@@ -20,15 +36,32 @@
 		}
 		
 		li{
+
 			float: left;
-			//Needs to match imageHeight
 			height: 150px;
+			overflow: hidden;
+			/*-webkit-filter: grayscale(1);*/
+
 		}
+
+		ul li{
+			
+		}
+		
+		li.hover{
+
+			-webkit-transform-origin-x: 50%;
+			-webkit-transform-origin-y: 50%;
+			/*-webkit-backface-visibility: visible;*/
+
+			-webkit-animation: spin 1s 1 ease;
+		}
+		
 	</style>
 </head>
 <body>
 <ul></ul>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script>
 	(function($){
 		var $body = $('body'),
@@ -51,7 +84,21 @@
 			imageList = $("ul");
 			imageList.width( numberOfImagesPerColumn * imageWidth );
 			renderPage();
+			assignEventHandler()
 		};
+		
+		var assignEventHandler = function(){
+			$(document).on('mouseenter', 'li', imageMouseEntersHandler);
+		}
+		
+		var imageMouseEntersHandler = function(){
+			var $this = $(this);
+
+			$this.addClass("hover");
+			window.setTimeout(function(){
+				$this.removeClass("hover");
+			}, 1000);	
+		}
 	
 		var numberOfImagesPerColumn = function(){
 			return Math.floor( winWidth / imageWidth );
@@ -101,7 +148,7 @@
 			var imgs = imgCollection.splice(0, numberOfImagesPerColumn);
 		
 			$.each(imgs,function(){
-				imageList.append('<li><img src="' + this.image_teaser_url + '" height="' + imageHeight + '" width="' + imageWidth + '"/></li>');
+				imageList.append('<li><a href="' + this.url + '"><img src="' + this.image_teaser_url + '" height="' + imageHeight + '" width="' + imageWidth + '"/></a></li>');
 			});
 
 			numberOfColumnsRendered += 1;
