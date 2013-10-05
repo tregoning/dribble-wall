@@ -1,17 +1,18 @@
 {
-	"name": "dribble_screensaver",
-	"description": "Dribble screensaver for Mac OSX",
-	"version": "0.0.1",
-	"private": true,
-	"devDependencies": {
-		"grunt": "*",
-		"grunt-contrib-concat": "*",
-		"grunt-contrib-uglify": "*",
-		"grunt-contrib-cssmin": "*",
-		"grunt-contrib-clean": "*"
-	},
-	"dependencies": {
-	},
-	"scripts": {
-	}
+  "name": "dribble_screensaver",
+  "description": "Dribble screensaver for Mac OSX",
+  "version": "0.0.1",
+  "private": true,
+  "devDependencies": {
+    "grunt": "*",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-cssmin": "*",
+    "grunt-contrib-clean": "*",
+    "grunt-contrib-compass": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-jshint": "*"
+  },
+  "dependencies": {},
+  "scripts": {}
 }

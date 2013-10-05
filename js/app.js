@@ -1,4 +1,7 @@
 (function($){
+
+	'use strict';
+
 	var $body = $('body'),
 		winWidth = $body.width(),
 		winHeight = $body.height(),
@@ -14,9 +17,9 @@
 
 
 	var init = function(){
-		numberOfImagesPerColumn = numberOfImagesPerColumn();
-		numberOfColumnsRequired = numberOfColumnsRequired();
-		imageList = $("ul");
+		numberOfImagesPerColumn = getNumberOfImagesPerColumn();
+		numberOfColumnsRequired = getNumberOfColumnsRequired();
+		imageList = $('ul');
 		imageList.width( numberOfImagesPerColumn * imageWidth );
 		centerList();
 		renderPage();
@@ -33,8 +36,8 @@
 		},500);
 	};
 
-	rotateImg = function(index){
-		var node = $("li",imageList).eq(index);
+	var rotateImg = function(index){
+		var node = $('li',imageList).eq(index);
 		node.addClass('rotate');
 		window.setTimeout(function(){
 			node.removeClass('rotate');
@@ -52,11 +55,11 @@
 		imageList.css('margin-top', marginTop);
 	};
 
-	var numberOfImagesPerColumn = function(){
+	var getNumberOfImagesPerColumn = function(){
 		return Math.ceil( winWidth / imageWidth );
 	};
 
-	var numberOfColumnsRequired = function(){
+	var getNumberOfColumnsRequired = function(){
 		return Math.ceil( winHeight / imageHeight );
 	};
 
@@ -65,13 +68,13 @@
 			numberOfFetches = Math.ceil( totalNumberOfImagesRequired / numberOfImagesFetchedPerCall );
 
 		for (var i = 1; i <= numberOfFetches; i++){
-			fetchDribbbleImages(i)
-		};
+			fetchDribbbleImages(i);
+		}
 	};
 
 	//debuts, everyone, popular
 	var fetchDribbbleImages = function(page){
-		$.getJSON("http://api.dribbble.com/shots/popular?callback=?",
+		$.getJSON('http://api.dribbble.com/shots/popular?callback=?',
 			{
 				page: page,
 				per_page:30
@@ -87,7 +90,7 @@
 					}else{
 						break;
 					}
-				};
+				}
 
 			});
 	};
