@@ -3,19 +3,19 @@
 	'use strict';
 
 	var $body = $('body'),
+		dribbleEndPoint = 'http://api.dribbble.com/shots/popular?callback=?', //debuts, everyone, popular
 		winWidth = $body.width(),
 		winHeight = $body.height(),
 		imageList,
 		imageWidth = 200,
 		imageHeight = 150,
-		animationLength = 1000,
 		numberOfImagesFetchedPerCall = 30,
-		imgCollection = [],
 		numberOfColumnsRendered = 0,
+		delayBetweenTileAnimation = 500,
+		imgCollection = [],
 		numberOfImagesPerColumn,
 		numberOfColumnsRequired,
 		numberOfRenderColumnCallsPerFetch = Math.floor( winWidth / numberOfImagesFetchedPerCall );
-
 
 	var init = function(){
 		numberOfImagesPerColumn = getNumberOfImagesPerColumn();
@@ -24,25 +24,31 @@
 		imageList.width( numberOfImagesPerColumn * imageWidth );
 		centerList();
 		renderPage();
-		dance();
+		assignEventHandlers();
+		startAnimation();
 	};
 
-	var dance = function(){
+	var assignEventHandlers = function(){
+		$body.on('animationend webkitAnimationEnd MSAnimationEnd oAnimationEnd', 'li',  animationEndCallback);
+	};
+
+	var animationEndCallback = function(){
+		$(this).removeClass('rotate');
+	};
+
+	var startAnimation = function(){
 		var randomIndex,
 			totalNumberOfImgs = numberOfImagesPerColumn * numberOfColumnsRequired;
 
 		window.setInterval(function(){
 			randomIndex = Math.floor(Math.random() * totalNumberOfImgs);
 			rotateImg(randomIndex);
-		},500);
+		}, delayBetweenTileAnimation);
 	};
 
 	var rotateImg = function(index){
 		var node = $('li',imageList).eq(index);
 		node.addClass('rotate');
-		window.setTimeout(function(){
-			node.removeClass('rotate');
-		}, animationLength);
 	};
 
 	var centerList = function(){
@@ -73,12 +79,11 @@
 		}
 	};
 
-	//debuts, everyone, popular
 	var fetchDribbbleImages = function(page){
-		$.getJSON('http://api.dribbble.com/shots/popular?callback=?',
+		$.getJSON(dribbleEndPoint,
 			{
 				page: page,
-				per_page:30
+				per_page:numberOfImagesFetchedPerCall
 			},
 			function(data){
 				$.each(data.shots, function(){
@@ -87,7 +92,7 @@
 
 				for(var i=0; i < numberOfRenderColumnCallsPerFetch; i++){
 					if(numberOfColumnsRendered < numberOfColumnsRequired){
-						insertColumn(numberOfRenderColumnCallsPerFetch);
+						insertColumn();
 					}else{
 						break;
 					}
@@ -106,19 +111,9 @@
 		numberOfColumnsRendered += 1;
 	};
 
-	var renderColumnEventually = function(){
-		if(numberOfColumnsRequired < numberOfColumnsRendered){
-			setTimeout(function(){
-				insertColumn();
-			}, 3000); //TODO: WTF is this crap!
-		}
-	};
-
 	var insertColumn = function(){
 		if(numberOfImagesPerColumn <= imgCollection.length){
 			renderColumn();
-		}else{
-			renderColumnEventually();
 		}
 	};
 
