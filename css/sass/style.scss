@@ -1,52 +1,68 @@
-@-webkit-keyframes spin {
-	0% {
-		-webkit-transform: rotateY(0deg);
-	} 20% {
-		  -webkit-transform: rotateY(180deg);
-	  } 40% {
-			-webkit-transform: rotateY(360deg);
-			-webkit-filter: grayscale(1);
-		}
+@import "animation";
+@import "compass/css3/filter";
+@import "compass/css3/transform";
+
+@include keyframes(colour) {
+	0%{
+		@include filter(grayscale(0));
+	}
+	20% {
+		@include filter(grayscale(0));
+	}
+	21% {
+		@include filter(grayscale(100%));
+	}
 	100% {
-		-webkit-filter: none;
-		-webkit-transform: rotateY(360deg);
+		@include filter(grayscale(0%));
 	}
 }
 
-body, html{
+@include keyframes(spin) {
+	0% {
+		@include rotateY(0);
+	}
+	20% {
+		@include rotateY(180deg);
+	}
+	40% {
+		@include rotateY(360deg);
+	}
+	100% {
+		@include rotateY(360deg);
+	}
+}
+
+body, html {
 	height: 100%;
 	background-color: #000;
 	overflow: hidden;
 }
 
-body,ul,li,img{
-	padding:0;
-	margin:0;
+body, ul, li, img {
+	padding: 0;
+	margin: 0;
 }
 
-ul{
+ul {
 	list-style: none;
 	margin: 0 auto;
 }
 
-li{
+li {
 
 	float: left;
 	height: 150px;
 	overflow: hidden;
-	/*-webkit-filter: grayscale(1);*/
 
 }
 
-ul li{
+li.rotate {
 
-}
+	@include transform-origin(50%, 50%);
+	@include backface-visibility(visible);
+	@include animation-name(spin, colour);
+	@include animation-duration(1s);
+	@include animation-iteration-count(1);
+	@include animation-timing-function(ease);
 
-li.rotate{
-
-	-webkit-transform-origin-x: 50%;
-	-webkit-transform-origin-y: 50%;
-	/*-webkit-backface-visibility: visible;*/
-
-	-webkit-animation: spin 1s 1 ease;
 }

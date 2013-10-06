@@ -46,18 +46,21 @@ module.exports = function(grunt) {
 		clean: ["css/dist", "js/dist", "css/*.css"],
 
 		compass: {
+			options:{
+				sassDir: 'css/sass',
+				cssDir: 'css',
+				imagesDir: 'img',
+				relativeAssets: true,
+				force: true,
+				require:['animation'] //will not need this in after Compass 0.13 is released
+			},
 			dev: {
 				options: {
 					environment: 'development',
-					sassDir: 'css/sass',
-					cssDir: 'css',
-					imagesDir: 'img',
 					outputStyle: 'expanded',
 					noLineComments: false,
-					relativeAssets: true,
 					trace: true,
 					debugInfo: true,
-					force: true
 					//httpImagesPath: '/img',
 					//httpGeneratedImagesPath: '/images'
 				}
@@ -65,13 +68,8 @@ module.exports = function(grunt) {
 			prod: {
 				options: {
 					environment: 'production',
-					sassDir: 'css/sass',
-					cssDir: 'css',
-					imagesDir: 'img',
 					outputStyle: 'compressed',
 					noLineComments: true,
-					relativeAssets: true,
-					force: true
 					//httpImagesPath: 'https://s.yimg.com/uy/build/images',
 					//httpGeneratedImagesPath: 'https://s.yimg.com/uy/build/images'
 				}
@@ -99,8 +97,6 @@ module.exports = function(grunt) {
 				tasks: ['compass:dev'],
 				options: {
 					livereload: false, //need this to not kick a full page reload for css changes
-					spawn: false,
-					interrupt: true
 				}
 			},
 			css: {

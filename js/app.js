@@ -8,6 +8,7 @@
 		imageList,
 		imageWidth = 200,
 		imageHeight = 150,
+		animationLength = 1000,
 		numberOfImagesFetchedPerCall = 30,
 		imgCollection = [],
 		numberOfColumnsRendered = 0,
@@ -41,7 +42,7 @@
 		node.addClass('rotate');
 		window.setTimeout(function(){
 			node.removeClass('rotate');
-		}, 1000);
+		}, animationLength);
 	};
 
 	var centerList = function(){
@@ -109,7 +110,7 @@
 		if(numberOfColumnsRequired < numberOfColumnsRendered){
 			setTimeout(function(){
 				insertColumn();
-			}, 3000);
+			}, 3000); //TODO: WTF is this crap!
 		}
 	};
 
